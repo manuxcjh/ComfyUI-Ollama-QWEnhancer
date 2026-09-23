@@ -4,6 +4,7 @@ config/local.json
 docs/
 tests/
 tools/
+requirements-dev.txt
 .github/
 .git/
 *.md

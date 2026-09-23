@@ -128,11 +128,15 @@ QWE_LOG=debug python main.py     # 启动 ComfyUI 时带上
 ### 1. 安装依赖
 
 本包运行期**只需要** `ollama` 客户端；`torch` / `numpy` / `Pillow` / `aiohttp`
-全部复用 ComfyUI 宿主。
+全部复用 ComfyUI 宿主，因此在 `requirements.txt` 中**刻意不声明**它们
+（声明 `torch` 会导致 `pip install` 尝试替换与 CUDA 匹配的 PyTorch 构建）。
 
 ```bash
-<comfy-venv>/bin/python -m pip install -r requirements.txt
+python -m pip install -r requirements.txt       # 运行期：只有 ollama
+python -m pip install -r requirements-dev.txt   # 可选：跑测试用的 numpy/Pillow/pytest
 ```
+
+用哪个 `python`？就是 ComfyUI 启动所用的那个解释器（其环境里已有宿主依赖）。
 
 ### 2. 放入 custom_nodes
 
@@ -238,7 +242,7 @@ QWE_OFFLINE=1 bash tests/run_all.sh
 
 | 文档 | 内容 |
 | --- | --- |
-| [`docs/00-环境记录.md`](docs/00-环境记录.md) | P0 环境实测：Ollama 模型清单、ComfyUI 路径与挂载、venv、API 契约、踩坑记录 |
+| [`docs/00-环境记录.md`](docs/00-环境记录.md) | 环境要求与实测：Ollama 模型清单、ComfyUI 路径与挂载、venv、API 契约、踩坑记录 |
 | [`docs/01-系统需求分析.md`](docs/01-系统需求分析.md) | 需求分析：FR / DR / NFR、接口契约、风险、验收标准 |
 | [`docs/02-新软件包创建流程.md`](docs/02-新软件包创建流程.md) | P0–P7 阶段与 G0–G7 门控、命名规范、DoD |
 | [`docs/03-功能对等矩阵.md`](docs/03-功能对等矩阵.md) | 上游功能逐条处置、参数映射、需求追溯、决策记录 |

@@ -57,6 +57,13 @@ SageAttention/FlashAttention、`torch.compile`、设备选择、`num_beams`。
 4. 默认地址指向 localhost 而非实际局域网服务
 5. 输出清洗不认 Qwen `｜end▁of▁thinking｜` 分隔符
 
+## v0.1.3
+
+- 补齐依赖声明：`requirements.txt` 明确列出运行期唯一依赖 `ollama`，
+  并逐条说明为何 `torch`/`numpy`/`Pillow`/`aiohttp` 由 ComfyUI 宿主提供而不声明，
+  以及本包明确不使用的依赖（transformers / bitsandbytes / llama-cpp-python 等）。
+- 新增 `requirements-dev.txt`：跑测试所需的 numpy / Pillow 与可选的 pytest。
+
 ## v0.1.2
 
 - 修复：`tests/run_all.sh` 在**干净克隆**下会退回系统 `python3`（缺 numpy/Pillow），

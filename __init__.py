@@ -20,7 +20,7 @@
 
 from __future__ import annotations
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __repo_name__ = "ComfyUI-Ollama-QWEnhancer"
 
 from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS  # noqa: E402

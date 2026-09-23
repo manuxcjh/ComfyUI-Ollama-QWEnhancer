@@ -1,0 +1,22 @@
+# ComfyUI-Ollama-QWEnhancer — 开发与测试依赖
+#
+# 安装：
+#     pip install -r requirements-dev.txt
+#
+# ⚠️ 跑测试必须使用 **ComfyUI 所使用的 Python**，因为测试要用到宿主的
+#    numpy / Pillow / torch / aiohttp。tests/run_all.sh 会做解释器预检，
+#    选错时会直接告知缺哪个模块以及该如何指定：
+#
+#     QWE_PYTHON=/path/to/ComfyUI/venv/bin/python bash tests/run_all.sh
+#     # 或
+#     COMFY_VENV=/path/to/ComfyUI/venv bash tests/run_all.sh
+#
+-r requirements.txt
+
+# 离线测试需要：数值处理与 PNG 编码
+numpy>=1.24
+Pillow>=9.0
+
+# 可选。tests/ 下的每个测试文件都自带简易 runner，
+# 没有 pytest 也能直接 `python tests/xxx.py` 运行。
+pytest>=7.0

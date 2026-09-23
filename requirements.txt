@@ -1,5 +1,32 @@
-# ComfyUI-Ollama-QWEnhancer 运行期依赖
+# ComfyUI-Ollama-QWEnhancer — 运行期依赖
 #
-# torch / numpy / Pillow / aiohttp 由 ComfyUI 宿主提供，不在此声明（NFR-01）。
-# 本包不含 transformers / bitsandbytes / llama-cpp-python —— 推理全部交给 Ollama。
+# 安装（在 ComfyUI 所使用的 Python 环境中执行）：
+#     pip install -r requirements.txt
+#
+# 本包自身只需要下面这一个包。
 ollama>=0.4,<1.0
+
+# ---------------------------------------------------------------------------
+# 以下依赖由 ComfyUI 宿主提供，**故意不在此声明**
+# ---------------------------------------------------------------------------
+#   torch      张量 → 图像转换（core/media.py，函数内惰性导入）
+#   numpy      数值处理（core/media.py）
+#   Pillow     PNG 编码（core/media.py）
+#   aiohttp    HTTP 路由（server/routes.py，经由 ComfyUI 的 PromptServer）
+#   comfy / server   宿主模块（comfy.utils.ProgressBar、server.PromptServer）
+#
+# 为什么不写进来：
+#   在 ComfyUI 环境里执行 pip install -r requirements.txt 时，如果声明了 torch，
+#   pip 可能尝试重装或替换 PyTorch，从而破坏与当前 CUDA 匹配的构建（体积数 GB）。
+#   正确做法是先正常运行一次 ComfyUI，确认这些依赖已就绪。
+#
+# ---------------------------------------------------------------------------
+# 本包明确不使用（迁移自 ComfyUI-QwenVL 时已移除）
+# ---------------------------------------------------------------------------
+#   transformers / bitsandbytes / accelerate    不做本地模型加载与运行期量化
+#   llama-cpp-python                            不使用 GGUF 本地推理
+#   huggingface-hub / hf_xet                    不下载模型
+#   sageattention / flash-attn                  不接管注意力后端
+#
+# 所有推理都通过 HTTP 交给 Ollama 服务端完成，模型与量化由 Ollama 侧的
+# tag（例如 qwen2.5vl:7b）表达。

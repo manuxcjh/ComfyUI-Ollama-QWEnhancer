@@ -202,13 +202,23 @@ git clone https://github.com/manuxcjh/ComfyUI-Ollama-QWEnhancer.git
 
 ## 测试
 
+测试依赖 **ComfyUI 宿主的 Python**（需要 numpy / Pillow / torch / aiohttp）：
+
 ```bash
+# 指定 ComfyUI 的解释器（推荐写进 config/local.json 的 "python" 字段，之后免参数）
+QWE_PYTHON=/path/to/ComfyUI/venv/bin/python bash tests/run_all.sh
+# 或
+COMFY_VENV=/path/to/ComfyUI/venv bash tests/run_all.sh
+
 # 全部（含对真实 Ollama 的端到端测试）
 bash tests/run_all.sh
 
 # 仅离线（无需 Ollama 服务）
 QWE_OFFLINE=1 bash tests/run_all.sh
 ```
+
+若解释器选错（例如退回到系统 python3），预检会直接指出缺少哪个模块并给出上面的命令，
+而不是抛出 `No module named 'PIL'` 之类难以定位的报错。
 
 单独运行：
 

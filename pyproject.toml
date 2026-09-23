@@ -1,7 +1,7 @@
 # 规范依据：https://docs.comfy.org/registry/specifications
 [project]
 name = "comfyui-ollama-qwenhancer"
-version = "0.1.1"
+version = "0.1.2"
 description = "Qwen-VL style prompt enhancement and vision-language inference on the Ollama backend for ComfyUI"
 readme = "README.md"
 license = { file = "LICENSE" }

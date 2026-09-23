@@ -2,28 +2,73 @@
 # 一键跑通全部门控（G1 / G2 / G3 / G4 / G5 / G6）
 #
 # 用法：
-#   bash tests/run_all.sh              # 全部（含对真实 Ollama 的实网测试）
-#   QWE_OFFLINE=1 bash tests/run_all.sh # 只跑离线部分
+#   bash tests/run_all.sh               # 全部（含对真实 Ollama 的实网测试）
+#   QWE_OFFLINE=1 bash tests/run_all.sh # 只跑离线部分（不需要 Ollama 服务）
 #
-# 环境变量：
-#   QWE_PYTHON  指定 ComfyUI 所在环境的 python（默认探测）
-#   QWE_URL     Ollama 地址（默认 http://127.0.0.1:11434）
-#   QWE_MODEL   模型名（默认 qwen2.5vl:7b）
+# 解释器：本包运行期依赖 ComfyUI 宿主提供的 numpy / Pillow / torch，
+# 因此**必须用 ComfyUI 的那个 Python**。选择顺序：
+#   1) QWE_PYTHON 环境变量
+#   2) COMFY_VENV 环境变量（指向 venv 根目录）
+#   3) config/local.json 的 "python" 字段
+#   4) python3（通常不带上述依赖，会在预检处被拦下并给出提示）
+#
+# 其它环境变量：
+#   QWE_URL     Ollama 地址（留空则由 core/types.py 解析）
+#   QWE_MODEL   模型名（留空则由 core/types.py 解析）
 set -uo pipefail
 
 PKG="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PKG"
 
-# 选择 Python：QWE_PYTHON > config/local.json 的 "python" > python3
-# （ComfyUI 的 venv 里有 torch / aiohttp / ollama，优先用它）
+# 从 config/local.json 读取本机专用配置（该文件已 gitignore）
 _lc() {
-  local cfg="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/config/local.json"
+  local cfg="$PKG/config/local.json"
   [[ -f "$cfg" ]] || return 0
   python3 -c "import json,sys;print(json.load(open(sys.argv[1],encoding='utf-8')).get(sys.argv[2]) or '')" "$cfg" "$1" 2>/dev/null || true
 }
-PY="${QWE_PYTHON:-$(_lc python)}"
+
+PY="${QWE_PYTHON:-}"
+if [[ -z "$PY" && -n "${COMFY_VENV:-}" && -x "${COMFY_VENV}/bin/python" ]]; then
+  PY="${COMFY_VENV}/bin/python"
+fi
+[[ -z "$PY" ]] && PY="$(_lc python)"
 if [[ -z "$PY" || ! -x "$PY" ]]; then
-  if command -v python3 >/dev/null 2>&1; then PY=python3; fi
+  PY="$(command -v python3 || true)"
+fi
+
+# --- 预检：缺依赖时给出可操作的提示，而不是让 4 个测试报 "No module named 'PIL'" ---
+if [[ -z "$PY" ]]; then
+  echo "❌ 找不到可用的 Python 解释器。"
+  exit 1
+fi
+_missing="$("$PY" - <<'PYEOF' 2>/dev/null || echo "python"
+mods = []
+for m in ("numpy", "PIL"):
+    try:
+        __import__(m)
+    except Exception:
+        mods.append(m)
+print(",".join(mods))
+PYEOF
+)"
+if [[ -n "$_missing" ]]; then
+  cat <<EOF
+❌ 选中的 Python 缺少依赖：$_missing
+   解释器：$PY
+
+   本包运行期依赖 ComfyUI 宿主提供的 numpy / Pillow / torch，
+   请指定 ComfyUI 所使用的 Python，例如：
+
+     QWE_PYTHON=/path/to/ComfyUI/venv/bin/python bash tests/run_all.sh
+     # 或
+     COMFY_VENV=/path/to/ComfyUI/venv bash tests/run_all.sh
+
+   也可以把它写进本机配置，之后就不用每次带参数：
+
+     cp config/local.json.example config/local.json
+     # 编辑其中的 "python": "/path/to/ComfyUI/venv/bin/python"
+EOF
+  exit 1
 fi
 
 # 不硬编码地址/模型：留空时由 core/types.py 解析（环境变量 > config/local.json > 默认）

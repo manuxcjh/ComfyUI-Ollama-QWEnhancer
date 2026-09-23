@@ -57,7 +57,14 @@ SageAttention/FlashAttention、`torch.compile`、设备选择、`num_beams`。
 4. 默认地址指向 localhost 而非实际局域网服务
 5. 输出清洗不认 Qwen `｜end▁of▁thinking｜` 分隔符
 
-## v0.1.1（未发布）
+## v0.1.2
+
+- 修复：`tests/run_all.sh` 在**干净克隆**下会退回系统 `python3`（缺 numpy/Pillow），
+  导致 4 个测试报 `No module named 'PIL'` 这种难以定位的错误。
+  现在支持 `QWE_PYTHON` / `COMFY_VENV` / `config/local.json` 三种指定方式，
+  并在预检阶段直接说明缺什么、该怎么指定。
+
+## v0.1.1
 
 相对 v0.1.0 的增量：
 

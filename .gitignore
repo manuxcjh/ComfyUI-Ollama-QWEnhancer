@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+*~
+
+# 本机覆盖配置（含内网地址/私有模型名，绝不提交）
+config/local.json
+local.env
+*.local

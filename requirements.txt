@@ -1,0 +1,5 @@
+# ComfyUI-Ollama-QWEnhancer 运行期依赖
+#
+# torch / numpy / Pillow / aiohttp 由 ComfyUI 宿主提供，不在此声明（NFR-01）。
+# 本包不含 transformers / bitsandbytes / llama-cpp-python —— 推理全部交给 Ollama。
+ollama>=0.4,<1.0

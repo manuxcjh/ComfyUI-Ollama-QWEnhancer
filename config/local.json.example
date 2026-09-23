@@ -1,0 +1,7 @@
+{
+  "_comment": "复制为 config/local.json 即可覆盖源码内置默认值。该文件已 gitignore，不会提交。",
+  "url": "http://127.0.0.1:11434",
+  "model": "qwen2.5vl:7b",
+  "keep_alive": 5,
+  "keep_alive_unit": "minutes"
+}

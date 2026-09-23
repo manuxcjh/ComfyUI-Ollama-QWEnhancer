@@ -1,0 +1,24 @@
+# 规范依据：https://docs.comfy.org/registry/specifications
+[project]
+name = "comfyui-ollama-qwenhancer"
+version = "0.1.1"
+description = "Qwen-VL style prompt enhancement and vision-language inference on the Ollama backend for ComfyUI"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = ["ollama>=0.4,<1.0"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+
+[project.urls]
+Repository = "https://github.com/manuxcjh/ComfyUI-Ollama-QWEnhancer"
+Issues = "https://github.com/manuxcjh/ComfyUI-Ollama-QWEnhancer/issues"
+
+[tool.comfy]
+PublisherId = "manuxcjh"
+DisplayName = "ComfyUI Ollama QWEnhancer"
+Icon = ""
+requires-comfyui = ">=1.3.0"

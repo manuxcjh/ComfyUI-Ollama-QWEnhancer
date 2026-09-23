@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+config/local.json
+docs/
+tests/
+tools/
+.github/
+.git/
+*.md
+!README.md
